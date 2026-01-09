@@ -2,6 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarFooter,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+} from "@/components/ui/sidebar";
 import { LayoutDashboard, FilePlus, FileUp, ChartPie, Zap } from "lucide-react";
 
 const paths = [
@@ -27,58 +36,87 @@ const paths = [
   },
 ];
 
-export default function Sidebar() {
+export default function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="bg-[#2e28d7] text-white min-h-screen w-full flex flex-col">
-      {/* Logo Section */}
-      <div className="p-6 flex items-center gap-3">
-        <div className="bg-white/10 p-2 rounded-lg">
-          <Zap size={24} className="text-white" fill="white" />
+    <Sidebar className="border-r border-sidebar-border bg-sidebar">
+      {/* Logo */}
+      <SidebarHeader className="border-b border-sidebar-border p-6">
+        <div className="flex items-center gap-3">
+          <div className="bg-sidebar-primary/10 backdrop-blur-sm p-2.5 rounded-xl shadow-md ring-1 ring-sidebar-primary/20">
+            <Zap
+              size={24}
+              className="text-sidebar-primary"
+              fill="currentColor"
+            />
+          </div>
+          <span className="text-xl font-bold text-sidebar-foreground tracking-tight">
+            Form Suite
+          </span>
         </div>
-        <h1 className="text-xl font-bold">FormSuite</h1>
-      </div>
+      </SidebarHeader>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-2">
-        {paths.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.path;
+      <SidebarContent className="px-3 py-6">
+        <SidebarMenu className="space-y-1.5">
+          {paths.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.path;
 
-          return (
-            <Link
-              key={item.path}
-              href={item.path}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg mb-1 transition-all ${
-                isActive
-                  ? "bg-white/10 text-white font-semibold"
-                  : "text-white/70 hover:bg-white/5 hover:text-white"
-              }`}
-            >
-              <Icon size={20} />
-              <span className="text-sm font-medium">{item.pathName}</span>
-            </Link>
-          );
-        })}
-      </nav>
+            return (
+              <SidebarMenuItem key={item.path}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isActive}
+                  className={`
+                    group relative overflow-hidden rounded-lg transition-all duration-200
+                    text-sidebar-foreground/70 hover:text-sidebar-foreground
+                    hover:bg-sidebar-accent hover:shadow-sm
+                    data-[active=true]:bg-sidebar-primary 
+                    data-[active=true]:text-sidebar-primary-foreground
+                    data-[active=true]:shadow-md
+                  `}
+                >
+                  <Link
+                    href={item.path}
+                    className="flex items-center gap-3 px-4 py-2.5"
+                  >
+                    <Icon
+                      className={`
+                      h-5 w-5 transition-transform duration-200
+                      group-hover:scale-110
+                      ${isActive ? "scale-110" : ""}
+                    `}
+                    />
+                    <span className="font-medium text-sm">{item.pathName}</span>
+                    {isActive && (
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-sidebar-primary-foreground rounded-r-full opacity-80" />
+                    )}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
+        </SidebarMenu>
+      </SidebarContent>
 
-      {/* User Profile Section */}
-      <div className="p-4 border-t border-white/10">
-        <div className="flex items-center gap-3 px-2 py-2">
-          <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-400 to-purple-500 flex items-center justify-center text-sm font-semibold">
-            AG
+      {/* User Profile */}
+      <SidebarFooter className="border-t border-sidebar-border p-4">
+        <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-sidebar-accent/50 hover:bg-sidebar-accent transition-all duration-200 cursor-pointer group">
+          <div className="h-10 w-10 rounded-full bg-linear-to-br from-primary via-chart-2 to-accent flex items-center justify-center text-sm font-bold shrink-0 shadow-md ring-2 ring-sidebar-border">
+            <span className="text-primary-foreground">AG</span>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold truncate text-sidebar-foreground group-hover:text-sidebar-accent-foreground transition-colors">
               Alex Google
             </p>
-            <p className="text-xs text-white/60 truncate">
+            <p className="text-xs text-sidebar-foreground/60 truncate">
               alex.google@example.com
             </p>
           </div>
         </div>
-      </div>
-    </aside>
+      </SidebarFooter>
+    </Sidebar>
   );
 }

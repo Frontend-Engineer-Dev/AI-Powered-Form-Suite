@@ -7,9 +7,10 @@ export default function ActionButton({
   type,
   className,
   children,
+  varient,
 }: actionType) {
   return (
-    <Button type={type} className={className} size={"lg"}>
+    <Button variant={varient} type={type} className={className}>
       {children}
     </Button>
   );

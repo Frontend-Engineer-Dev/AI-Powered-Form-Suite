@@ -1,9 +1,20 @@
-import React from "react";
+import ActionButton from "@/components/Button";
 
 export default function page() {
   return (
-    <>
-      <h1>Welcome to dashboard</h1>
-    </>
+    <section className="p-8 w-full">
+      <div className="flex items-center justify-between w-full">
+        <div>
+          <h1 className="text-2xl font-semibold">Welcome back, Alex </h1>
+          <p className="text-gray-400 text-md">
+            Here's what happening with your forms today.
+          </p>
+        </div>
+
+        <ActionButton type="button" className="bg-primary font-semibold">
+          Create Form
+        </ActionButton>
+      </div>
+    </section>
   );
 }
