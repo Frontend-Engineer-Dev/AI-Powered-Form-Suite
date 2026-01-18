@@ -3,14 +3,9 @@
 import { Button as actionType } from "@/types/components";
 import { Button } from "./ui/button";
 
-export default function ActionButton({
-  type,
-  className,
-  children,
-  varient,
-}: actionType) {
+export default function ActionButton({ type, className, children, variant }: actionType) {
   return (
-    <Button variant={varient} type={type} className={className}>
+    <Button variant={variant} type={type} className={className}>
       {children}
     </Button>
   );

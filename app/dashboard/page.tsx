@@ -1,4 +1,5 @@
 import ActionButton from "@/components/Button";
+import FormModal from "@/components/FormModel";
 
 export default function page() {
   return (
@@ -10,10 +11,7 @@ export default function page() {
             Here's what happening with your forms today.
           </p>
         </div>
-
-        <ActionButton type="button" className="bg-primary font-semibold">
-          Create Form
-        </ActionButton>
+        <FormModal />
       </div>
     </section>
   );

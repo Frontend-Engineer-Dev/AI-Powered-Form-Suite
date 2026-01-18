@@ -1,15 +1,20 @@
 import ActionButton from "@/components/Button";
-import CreateForm from "@/components/CreateForm";
+import CreateForm from "@/components/FormModel";
+import FormBuilderHeader from "@/components/FormBuilderHeader";
+import FormWrapper from "@/components/FormWrapper";
 
-export default function FormBuilderPage() {
+export default function FormBuilder() {
   return (
-    <section className="max-w-[80%] mx-auto w-full my-5">
-      <div className="w-full flex items-center justify-between">
-        <CreateForm />
-        <div className="flex items-end space-x-5">
+    <main className="max-w-[80%] mx-auto w-full my-5 space-y-10 animate-in fade-in duration-500">
+      {/* Form Builder Header */}
+      <header className="w-full flex items-center justify-between mb-20 gap-3">
+        <div className="w-3/4">
+          <FormBuilderHeader />
+        </div>
+        <div className="flex items-end space-x-5 w-1/4">
           <ActionButton
             type="button"
-            varient={"outline"}
+            variant={"outline"}
             className="font-semibold"
           >
             Save Blueprint
@@ -18,7 +23,9 @@ export default function FormBuilderPage() {
             Sync to Google
           </ActionButton>
         </div>
-      </div>
-    </section>
+      </header>
+      {/* Form Editor */}
+      <FormWrapper />
+    </main>
   );
 }

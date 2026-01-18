@@ -1,7 +1,7 @@
 // Button
 export type Button = {
   className?: string;
-  varient?:
+  variant?:
     | "link"
     | "default"
     | "destructive"
@@ -13,4 +13,10 @@ export type Button = {
   type: "submit" | "button" | "reset";
   children?: React.ReactNode;
   action?: () => void;
+};
+
+// Stepper
+export type stepperType = {
+  label: string;
+  path: string;
 };

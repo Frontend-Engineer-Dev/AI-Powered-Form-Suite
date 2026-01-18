@@ -3,6 +3,7 @@
 import DynamicBreadcrumb from "@/components/BreadCrumb";
 import { Bell, Menu } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 export default function Header() {
   return (
@@ -20,6 +21,14 @@ export default function Header() {
       {/* Right Section */}
       <div className="flex items-center space-x-5">
         <Bell size={18} />
+        <Link
+          href={
+            "https://developers.google.com/workspace/forms/api/reference/rest"
+          }
+          className="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+        >
+          Help Docs
+        </Link>
       </div>
     </header>
   );

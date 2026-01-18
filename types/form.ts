@@ -1,27 +1,7 @@
-export type QuestionType =
-  | "text"
-  | "email"
-  | "number"
-  | "radio"
-  | "checkbox"
-  | "dropdown";
+import { z } from "zod";
 
-export interface Option {
-  id: string;
-  label: string;
-}
+// Zod Validation
+import { CreateformSchema } from "@/schema/formValidation";
 
-export interface Question {
-  id: string;
-  title: string;
-  type: QuestionType;
-  required: boolean;
-  options?: Option[];
-}
-
-export interface FormSchema {
-  id: string;
-  title: string;
-  description?: string;
-  questions: Question[];
-}
+// Type : To create Form
+export type CreateFormType = z.infer<typeof CreateformSchema>;
