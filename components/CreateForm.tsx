@@ -1,9 +1,13 @@
 "use client";
 
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateformSchema } from "@/schema/formValidation";
 import { type CreateFormType } from "@/types/form";
+
+// Server Actions
+import { createForm } from "@/actions/form";
 
 export default function CreateForm() {
   const {
@@ -14,9 +18,21 @@ export default function CreateForm() {
     resolver: zodResolver(CreateformSchema),
   });
 
-  const onSubmit = (data: CreateFormType) => {
-    console.log("Form data:", data);
-    alert("Form submitted successfully! Check console for data.");
+  const [isPending, startTransition] = useTransition(); // For server actions
+
+  const onSubmit = async (data: CreateFormType) => {
+    startTransition(async () => {
+      const result = await createForm(data);
+
+      if (result instanceof Error) {
+        // Handle error - show toast, set form error, etc.
+        console.error("Form creation failed:", result.message);
+        return;
+      }
+
+      // Success! - show success message, redirect, etc.
+      console.log("Form created successfully!", result);
+    });
   };
 
   return (
@@ -62,7 +78,7 @@ export default function CreateForm() {
               ? "border-red-500 bg-red-50 focus:ring-red-500 focus:border-red-500"
               : "border-gray-400 bg-white"
           }`}
-          placeholder="Enter category"
+          placeholder="Enter form title"
         />
         {errors.documentTitle && (
           <p className="text-sm text-red-600 flex items-center gap-1">
@@ -95,7 +111,9 @@ export default function CreateForm() {
           </p>
         )}
       </div>
-
+      <span className="text-base text-gray-400 font-medium">
+        <b>Note</b> : Form settings will be added soon.
+      </span>
       <div className="flex gap-4 pt-4">
         <button
           type="button"

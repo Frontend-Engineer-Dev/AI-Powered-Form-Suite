@@ -1,8 +1,17 @@
 import axios, { AxiosRequestConfig } from "axios";
+import { useAuth } from "@clerk/nextjs";
 
-// Config
+async function getAccessToken() {
+  const token = await useAuth()?.getToken();
+  return token;
+}
+
 const config: AxiosRequestConfig = {
-  baseURL: "",
+  baseURL: "https://forms.googleapis.com",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${getAccessToken()}`,
+  },
 };
 
 const FormAPI = axios.create(config);

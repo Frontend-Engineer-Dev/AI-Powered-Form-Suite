@@ -4,17 +4,23 @@ import {
   SquareCheck,
   SquareChevronDown,
   FileSpreadsheet,
+  LucideIcon,
 } from "lucide-react";
-import { QuestionComponent } from "@/types/form";
+// import { QuestionComponent } from "@/types/form";
 
-const QUENTIONCOMPONENT: QuestionComponent[] = [
+type QuestionToolsType = {
+  value: string;
+  label: string;
+  icon: LucideIcon;
+};
+const questionComponent: QuestionToolsType[] = [
   { value: "TEXT", label: "Short Answer", icon: TextAlignStart },
   { value: "MULTIPLE_CHOICE", label: "Multiple Choice", icon: CircleDot },
   { value: "CHECKBOX", label: "Checkboxes", icon: SquareCheck },
   { value: "DROPDOWN", label: "Dropdown", icon: SquareChevronDown },
 ];
 
-export default function QuentionTools() {
+export default function QuestionTools() {
   return (
     <>
       {/* Floating Sidebar Toolbox */}
@@ -28,7 +34,7 @@ export default function QuentionTools() {
           </div>
 
           <div className="grid grid-cols-1 gap-3">
-            {QUENTIONCOMPONENT.map((type) => (
+            {questionComponent.map((type) => (
               <button
                 key={type.value}
                 // onClick={() => addQuestion(type.value)}

@@ -2,29 +2,56 @@
 
 import { auth } from "@clerk/nextjs/server";
 import FormAPI from "@/utils/axios.config";
+import prisma from "@/lib/prisma";
+import { CreateFormResponse } from "@/types/FormAPI";
+import { CreateFormType } from "@/types/form";
 
-// To create a form
-async function createForm(prev: string, formdata: FormData) {
+type ActionResult =
+  | { success: true; formId: string }
+  | { success: false; error: string };
+
+export async function createForm(
+  formdata: CreateFormType,
+): Promise<ActionResult> {
   try {
-    // valid user
-    const { isAuthenticated } = await auth();
-    if (!isAuthenticated) {
-      throw new Error("Unauthorized User");
+    // valid user before access
+    const { userId } = await auth();
+    if (!userId) {
+      return { success: false, error: "Unauthorized User" };
     }
 
     // Accessing form field
-    const title = formdata.get("title");
-    const description = formdata.get("description");
-    const userDTO = { title, description }; // DTO Form Object
+    const { title, description, documentTitle } = formdata;
+    const userDTO = { info: { title, description, documentTitle } };
 
-    // To create form with goole form api
-    const formRes = await FormAPI.post("", userDTO);
+    // To create form with google form api
+    const formRes: CreateFormResponse = await FormAPI.post(
+      "/v1/forms",
+      userDTO,
+    );
 
-    // Store User Data
-    // const res = await db
+    // Store Form Data in db
+    const res = await prisma.form.create({
+      data: {
+        googleFormId: formRes.formId,
+        title: formRes.info.title,
+        documentTitle: formRes.info.documentTitle,
+        responderUri: formRes.responderUri,
+        settings: formRes.settings,
+        status: "PUBLISHED",
+        isPublished: true,
+        isAcceptingResponses: true,
+        createdById: userId,
+      },
+    });
 
-    return;
+    console.log("Form Created & Saved:", res);
+    return { success: true, formId: res.id };
   } catch (error) {
-    return error;
+    console.error("Create form error:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to create form",
+    };
   }
 }

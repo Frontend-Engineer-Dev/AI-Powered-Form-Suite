@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// FORM SCHEMA
+model Form {
+  id String @id @default(cuid())
+
+  /// External Google Form ID
+  googleFormId String @unique
+
+  title         String
+  documentTitle String?
+
+  responderUri String?
+  revisionId   String?
+
+  /// Creator (Auth provider userId)
+  createdById String
+
+  /// Form behavior & configuration
+  settings Json
+
+  /// Form lifecycle
+  status FormStatus @default(DRAFT)
+
+  /// Publish state (synced from Google)
+  isPublished          Boolean @default(false)
+  isAcceptingResponses Boolean @default(true)
+
+  /// Relations
+  questions Question[]
+
+  /// Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdById])
+  @@index([status])
+}
+
+
+// QUESTION SCHEMA
+model Question {
+  /// Internal DB identifier
+  id String @id @default(cuid())
+
+  /// Google Forms itemId (for sync)
+  googleItemId String? @unique
+
+  /// Relation
+  formId String
+  form   Form   @relation(fields: [formId], references: [id], onDelete: Cascade)
+
+  /// Core question data
+  title    String
+  type     QuestionType
+  required Boolean      @default(false)
+
+  /// Order within the form
+  order Int
+
+  /// Options (MCQ, Checkbox, Dropdown)
+  options Json?
+
+  /// Extended metadata (AI hints, validation, scoring, etc.)
+  metadata Json?
+
+  /// Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([formId, order]) // ensures stable ordering
+  @@index([formId])
+}
+
+// ENUMS
+enum FormStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum QuestionType {
+  SHORT_TEXT
+  PARAGRAPH
+  MULTIPLE_CHOICE
+  CHECKBOX
+  DROPDOWN
+  DATE
+  TIME
+  FILE_UPLOAD
+}
